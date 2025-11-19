@@ -1,5 +1,5 @@
 {
-  "name": "gohighlevel",
+  "name": "gohighlevel-api",
   "version": "1.0.0",
   "description": "Libreria para usar gohighlevel con npm",
   "main": "./cjs/index.js",
