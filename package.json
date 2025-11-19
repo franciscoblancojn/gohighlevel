@@ -1,0 +1,22 @@
+{
+  "name": "gohighlevel",
+  "version": "1.0.0",
+  "description": "Libreria para usar gohighlevel con npm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franciscoblancojn/gohighlevel.git"
+  },
+  "keywords": [
+    "gohighlevel"
+  ],
+  "author": "franciscoblancojn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/franciscoblancojn/gohighlevel/issues"
+  },
+  "homepage": "https://github.com/franciscoblancojn/gohighlevel#readme"
+}
