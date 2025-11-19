@@ -2,9 +2,19 @@
   "name": "gohighlevel",
   "version": "1.0.0",
   "description": "Libreria para usar gohighlevel con npm",
-  "main": "index.js",
+  "main": "./cjs/index.js",
+  "module": "./cjs/index.js",
+  "types": "./cjs/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "echo 'esm'",
+    "build:cjs": "tsc --module commonjs --outDir cjs",
+    "lint": "npx eslint src",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier src '!**/*.stories.tsx' --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "flb": "npm run format && npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
@@ -18,5 +28,22 @@
   "bugs": {
     "url": "https://github.com/franciscoblancojn/gohighlevel/issues"
   },
-  "homepage": "https://github.com/franciscoblancojn/gohighlevel#readme"
+  "homepage": "https://github.com/franciscoblancojn/gohighlevel#readme",
+  "dependencies": { },
+  "devDependencies": {
+    "@types/node": "^22.2.0",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "eslint": "^8.42.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.2.2",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
+    "ts-loader": "9.5.1",
+    "tslib": "2.6.2"
+  },
+  "files": [
+    "cjs",
+    "esm"
+  ]
 }
