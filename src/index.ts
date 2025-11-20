@@ -35,6 +35,11 @@ export interface IGohighlevelFunctionsContactCreate {
             website: string;
             timezone: string;
             dnd: boolean;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
         };
     };
     result: IGohighlevelFunctionsRequest<{
