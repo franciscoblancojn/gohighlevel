@@ -113,7 +113,7 @@ export interface IGohighlevelFunctionsContactGet {
         email?: string;
         phone?: string;
         dnd: boolean;
-        dndSettings: {};
+        dndSettings: any;
         type: string;
         source?: string;
         assignedTo: any;
