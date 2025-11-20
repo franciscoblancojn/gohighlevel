@@ -1,6 +1,6 @@
 export interface IGohighlevel {
     token: string;
-    locationId:string
+    locationId: string;
 }
 
 export type IGohighlevelType = "ok" | "error";
@@ -88,18 +88,79 @@ export interface IGohighlevelFunctionsContactCreate {
     }>["result"];
     respond: Promise<IGohighlevelFunctionsContactCreate["result"]>;
 }
+export interface IGohighlevelFunctionsContactGet {
+    props: {
+        id?: string;
+    };
+    result: IGohighlevelFunctionsRequest<{
+        id: string;
+        locationId: string;
+        contactName: string;
+        firstName: string;
+        lastName?: string;
+        firstNameRaw: string;
+        lastNameRaw?: string;
+        companyName: any;
+        email?: string;
+        phone?: string;
+        dnd: boolean;
+        dndSettings: {};
+        type: string;
+        source?: string;
+        assignedTo: any;
+        city?: string;
+        state?: string;
+        postalCode?: string;
+        address1?: string;
+        dateAdded: string;
+        dateUpdated: string;
+        dateOfBirth: any;
+        businessId: any;
+        tags: Array<string>;
+        followers: Array<any>;
+        country?: string;
+        website?: string;
+        timezone?: string;
+        profilePhoto?: string;
+        additionalEmails: Array<any>;
+        customFields: Array<{
+            id: string;
+            value: string;
+        }>;
+        attributions?: Array<{
+            pageUrl?: string;
+            utmSessionSource: string;
+            ip?: string;
+            isFirst?: boolean;
+            medium: string;
+            mediumId?: string;
+            userAgent?: string;
+            url?: string;
+            adSource?: string;
+            utmCampaign?: string;
+            utmMedium?: string;
+            utmCampaignId?: string;
+            utmAdId?: string;
+            utmSource?: string;
+            utmContent?: string;
+            isLast?: boolean;
+        }>;
+    }>["result"];
+    respond: Promise<IGohighlevelFunctionsContactGet["result"]>;
+}
 export interface IGohighlevelFunctions {
     onRequest: IGohighlevelFunctionsRequest;
-    onContactCreate: IGohighlevelFunctionsContactCreate;
+    onContactUpsert: IGohighlevelFunctionsContactCreate;
+    onContactGet: IGohighlevelFunctionsContactGet;
 }
 
 export class Gohighlevel {
     private token;
     private locationId;
     private version = "2021-07-28";
-    constructor({ token ,locationId}: IGohighlevel) {
+    constructor({ token, locationId }: IGohighlevel) {
         this.token = token;
-        this.locationId = locationId 
+        this.locationId = locationId;
     }
 
     onRequest = async ({
@@ -134,16 +195,31 @@ export class Gohighlevel {
         }
     };
 
-    onContactCreate = async ({
+    onContactUpsert = async ({
         data,
-    }: IGohighlevelFunctions["onContactCreate"]["props"]): IGohighlevelFunctions["onContactCreate"]["respond"] => {
+    }: IGohighlevelFunctions["onContactUpsert"]["props"]): IGohighlevelFunctions["onContactUpsert"]["respond"] => {
         const result = await this.onRequest({
             url: "https://services.leadconnectorhq.com/contacts/upsert",
             method: "POST",
             body: {
-              ...data,
-              locationId : this.locationId,
+                ...data,
+                locationId: this.locationId,
             },
+        });
+        return result;
+    };
+
+    onContactGet = async ({
+        id,
+    }: IGohighlevelFunctions["onContactGet"]["props"]): IGohighlevelFunctions["onContactGet"]["respond"] => {
+        let url = "https://services.leadconnectorhq.com/contacts";
+        if (id) {
+            url += `/${id}`;
+        }
+        url += `?locationId=${this.locationId}`;
+        const result = await this.onRequest({
+            url,
+            method: "GET",
         });
         return result;
     };
