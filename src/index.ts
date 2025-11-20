@@ -46,7 +46,6 @@ export interface IGohighlevelFunctionsContactCreate {
             deleted: boolean;
             tags: Array<any>;
             type: string;
-            customFields: Array<any>;
             locationId: string;
             firstName: string;
             firstNameLowerCase: string;
@@ -83,6 +82,11 @@ export interface IGohighlevelFunctionsContactCreate {
             lastSessionActivityAt: string;
             validEmail: any;
             validEmailDate: any;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
         };
         traceId: string;
     }>["result"];
@@ -148,10 +152,35 @@ export interface IGohighlevelFunctionsContactGet {
     }>["result"];
     respond: Promise<IGohighlevelFunctionsContactGet["result"]>;
 }
+
+export interface IGohighlevelFunctionsCustomFieldsGet {
+    props: {};
+    result: IGohighlevelFunctionsRequest<{
+        customFields: Array<{
+            id: string;
+            name: string;
+            model: string;
+            fieldKey: string;
+            placeholder: string;
+            dataType: string;
+            position: number;
+            documentType: string;
+            parentId: string;
+            locationId: string;
+            dateAdded: string;
+            standard: boolean;
+            picklistOptions?: Array<string>;
+        }>;
+        traceId: string;
+    }>["result"];
+    respond: Promise<IGohighlevelFunctionsCustomFieldsGet["result"]>;
+}
+
 export interface IGohighlevelFunctions {
     onRequest: IGohighlevelFunctionsRequest;
     onContactUpsert: IGohighlevelFunctionsContactCreate;
     onContactGet: IGohighlevelFunctionsContactGet;
+    onCustomFieldsGet: IGohighlevelFunctionsCustomFieldsGet;
 }
 
 export class Gohighlevel {
@@ -223,4 +252,13 @@ export class Gohighlevel {
         });
         return result;
     };
+
+    onCustomFieldsGet =
+        async ({}: IGohighlevelFunctions["onCustomFieldsGet"]["props"]): IGohighlevelFunctions["onCustomFieldsGet"]["respond"] => {
+            const result = await this.onRequest({
+                url: `https://services.leadconnectorhq.com/locations/${this.locationId}/customFields`,
+                method: "GET",
+            });
+            return result;
+        };
 }
