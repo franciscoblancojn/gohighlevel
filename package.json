@@ -29,7 +29,9 @@
     "url": "https://github.com/franciscoblancojn/gohighlevel/issues"
   },
   "homepage": "https://github.com/franciscoblancojn/gohighlevel#readme",
-  "dependencies": { },
+  "dependencies": {
+    
+  },
   "devDependencies": {
     "@types/node": "^22.2.0",
     "@types/react": "^18.2.31",
