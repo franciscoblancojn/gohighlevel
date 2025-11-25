@@ -229,7 +229,8 @@ export class Gohighlevel {
         } catch (error: any) {
             return {
                 status: "error",
-                message: [error?.message ?? null]?.flat(1)[0] ?? "Request error",
+                message:
+                    [error?.message ?? null]?.flat(1)[0] ?? "Request error",
                 error,
             };
         }

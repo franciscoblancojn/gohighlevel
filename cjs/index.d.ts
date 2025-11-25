@@ -8,6 +8,7 @@ export interface IGohighlevelFunctionsRequest<RD = any> {
         method: "GET" | "POST" | "PUT";
         body?: any;
         url: string;
+        ifError?: (result: any) => void;
     };
     result: {
         status: IGohighlevelType;
@@ -187,8 +188,9 @@ export declare class Gohighlevel {
     private token;
     private locationId;
     private version;
+    private url;
     constructor({ token, locationId }: IGohighlevel);
-    onRequest: ({ body, method, url, }: IGohighlevelFunctions["onRequest"]["props"]) => IGohighlevelFunctions["onRequest"]["respond"];
+    onRequest: ({ body, method, url, ifError, }: IGohighlevelFunctions["onRequest"]["props"]) => IGohighlevelFunctions["onRequest"]["respond"];
     onContactUpsert: ({ data, }: IGohighlevelFunctions["onContactUpsert"]["props"]) => IGohighlevelFunctions["onContactUpsert"]["respond"];
     onContactGet: ({ id, }: IGohighlevelFunctions["onContactGet"]["props"]) => IGohighlevelFunctions["onContactGet"]["respond"];
     onCustomFieldsGet: ({}: IGohighlevelFunctions["onCustomFieldsGet"]["props"]) => IGohighlevelFunctions["onCustomFieldsGet"]["respond"];

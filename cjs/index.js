@@ -5,13 +5,14 @@ class Gohighlevel {
     token;
     locationId;
     version = "2021-07-28";
+    url = "https://services.leadconnectorhq.com";
     constructor({ token, locationId }) {
         this.token = token;
         this.locationId = locationId;
     }
-    onRequest = async ({ body, method, url, }) => {
+    onRequest = async ({ body, method, url, ifError, }) => {
         try {
-            const response = await fetch(url, {
+            const response = await fetch(this.url + url, {
                 method,
                 headers: {
                     Accept: "application/json",
@@ -22,6 +23,9 @@ class Gohighlevel {
                 body: body ? JSON.stringify(body) : undefined,
             });
             const result = await response.json();
+            if (ifError) {
+                ifError(result);
+            }
             return {
                 status: "ok",
                 message: "Request ok",
@@ -31,24 +35,29 @@ class Gohighlevel {
         catch (error) {
             return {
                 status: "error",
-                message: error?.message ?? "Request error",
+                message: [error?.message ?? null]?.flat(1)[0] ?? "Request error",
                 error,
             };
         }
     };
     onContactUpsert = async ({ data, }) => {
         const result = await this.onRequest({
-            url: "https://services.leadconnectorhq.com/contacts/upsert",
+            url: "/contacts/upsert",
             method: "POST",
             body: {
                 ...data,
                 locationId: this.locationId,
             },
+            ifError: (result) => {
+                if (!result?.succeded) {
+                    throw result;
+                }
+            },
         });
         return result;
     };
     onContactGet = async ({ id, }) => {
-        let url = "https://services.leadconnectorhq.com/contacts";
+        let url = "/contacts";
         if (id) {
             url += `/${id}`;
         }
@@ -61,7 +70,7 @@ class Gohighlevel {
     };
     onCustomFieldsGet = async ({}) => {
         const result = await this.onRequest({
-            url: `https://services.leadconnectorhq.com/locations/${this.locationId}/customFields`,
+            url: `/locations/${this.locationId}/customFields`,
             method: "GET",
         });
         return result;
