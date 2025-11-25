@@ -10,6 +10,7 @@ export interface IGohighlevelFunctionsRequest<RD = any> {
         method: "GET" | "POST" | "PUT";
         body?: any;
         url: string;
+        ifError?: (result: any) => void;
     };
     result: {
         status: IGohighlevelType;
@@ -192,6 +193,7 @@ export class Gohighlevel {
     private token;
     private locationId;
     private version = "2021-07-28";
+    private url = "https://services.leadconnectorhq.com";
     constructor({ token, locationId }: IGohighlevel) {
         this.token = token;
         this.locationId = locationId;
@@ -201,9 +203,10 @@ export class Gohighlevel {
         body,
         method,
         url,
+        ifError,
     }: IGohighlevelFunctions["onRequest"]["props"]): IGohighlevelFunctions["onRequest"]["respond"] => {
         try {
-            const response = await fetch(url, {
+            const response = await fetch(this.url + url, {
                 method,
                 headers: {
                     Accept: "application/json",
@@ -215,6 +218,9 @@ export class Gohighlevel {
             });
 
             const result = await response.json();
+            if (ifError) {
+                ifError(result);
+            }
             return {
                 status: "ok",
                 message: "Request ok",
@@ -223,7 +229,7 @@ export class Gohighlevel {
         } catch (error: any) {
             return {
                 status: "error",
-                message: error?.message ?? "Request error",
+                message: [error?.message ?? null]?.flat(1)[0] ?? "Request error",
                 error,
             };
         }
@@ -233,11 +239,16 @@ export class Gohighlevel {
         data,
     }: IGohighlevelFunctions["onContactUpsert"]["props"]): IGohighlevelFunctions["onContactUpsert"]["respond"] => {
         const result = await this.onRequest({
-            url: "https://services.leadconnectorhq.com/contacts/upsert",
+            url: "/contacts/upsert",
             method: "POST",
             body: {
                 ...data,
                 locationId: this.locationId,
+            },
+            ifError: (result) => {
+                if (!result?.succeded) {
+                    throw result;
+                }
             },
         });
         return result;
@@ -246,7 +257,7 @@ export class Gohighlevel {
     onContactGet = async ({
         id,
     }: IGohighlevelFunctions["onContactGet"]["props"]): IGohighlevelFunctions["onContactGet"]["respond"] => {
-        let url = "https://services.leadconnectorhq.com/contacts";
+        let url = "/contacts";
         if (id) {
             url += `/${id}`;
         }
@@ -261,7 +272,7 @@ export class Gohighlevel {
     onCustomFieldsGet =
         async ({}: IGohighlevelFunctions["onCustomFieldsGet"]["props"]): IGohighlevelFunctions["onCustomFieldsGet"]["respond"] => {
             const result = await this.onRequest({
-                url: `https://services.leadconnectorhq.com/locations/${this.locationId}/customFields`,
+                url: `/locations/${this.locationId}/customFields`,
                 method: "GET",
             });
             return result;
