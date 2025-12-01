@@ -75,6 +75,22 @@ class Gohighlevel {
         });
         return result;
     };
+    onBusinessCreate = async ({ data, }) => {
+        const result = await this.onRequest({
+            url: `/businesses/`,
+            method: "POST",
+            body: {
+                ...data,
+                locationId: this.locationId,
+            },
+            ifError: (result) => {
+                if (!result?.business?.id) {
+                    throw new Error("Error creating business: " + JSON.stringify(result));
+                }
+            },
+        });
+        return result;
+    };
 }
 exports.Gohighlevel = Gohighlevel;
 //# sourceMappingURL=index.js.map
