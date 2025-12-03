@@ -227,6 +227,53 @@ export interface IGohighlevelFunctionsBusinessCreate {
     }>["result"];
     respond: Promise<IGohighlevelFunctionsBusinessCreate["result"]>;
 }
+export interface IGohighlevelFunctionsBusinessUpdate {
+    props: {
+        id: string;
+        data: {
+            name?: string;
+            phone?: string;
+            email?: string;
+            website?: string;
+            address?: string;
+            city?: string;
+            postalCode?: string;
+            state?: string;
+            country?: string;
+            description?: string;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
+        };
+    };
+    result: IGohighlevelFunctionsRequest<{
+        business: {
+            id: string;
+            name: string;
+            locationId: string;
+            phone?: string;
+            email?: string;
+            website?: string;
+            address?: string;
+            city?: string;
+            postalCode?: string;
+            state?: string;
+            country?: string;
+            description?: string;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
+            dateAdded: string;
+            dateUpdated: string;
+        };
+        traceId: string;
+    }>["result"];
+    respond: Promise<IGohighlevelFunctionsBusinessUpdate["result"]>;
+}
 
 export interface IGohighlevelFunctions {
     onRequest: IGohighlevelFunctionsRequest;
@@ -234,6 +281,7 @@ export interface IGohighlevelFunctions {
     onContactGet: IGohighlevelFunctionsContactGet;
     onCustomFieldsGet: IGohighlevelFunctionsCustomFieldsGet;
     onBusinessCreate: IGohighlevelFunctionsBusinessCreate;
+    onBusinessUpdate: IGohighlevelFunctionsBusinessUpdate;
 }
 
 export class Gohighlevel {
@@ -340,6 +388,28 @@ export class Gohighlevel {
                 if (!result?.business?.id) {
                     throw new Error(
                         "Error creating business: " + JSON.stringify(result),
+                    );
+                }
+            },
+        });
+
+        return result;
+    };
+    onBusinessUpdate = async ({
+        id,
+        data,
+    }: IGohighlevelFunctions["onBusinessUpdate"]["props"]): IGohighlevelFunctions["onBusinessUpdate"]["respond"] => {
+        const result = await this.onRequest({
+            url: `/businesses/${id}`,
+            method: "PUT",
+            body: {
+                ...data,
+                // locationId: this.locationId,
+            },
+            ifError: (result) => {
+                if (!result?.business?.id) {
+                    throw new Error(
+                        "Error updating business: " + JSON.stringify(result),
                     );
                 }
             },
