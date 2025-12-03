@@ -224,12 +224,60 @@ export interface IGohighlevelFunctionsBusinessCreate {
     }>["result"];
     respond: Promise<IGohighlevelFunctionsBusinessCreate["result"]>;
 }
+export interface IGohighlevelFunctionsBusinessUpdate {
+    props: {
+        id: string;
+        data: {
+            name?: string;
+            phone?: string;
+            email?: string;
+            website?: string;
+            address?: string;
+            city?: string;
+            postalCode?: string;
+            state?: string;
+            country?: string;
+            description?: string;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
+        };
+    };
+    result: IGohighlevelFunctionsRequest<{
+        business: {
+            id: string;
+            name: string;
+            locationId: string;
+            phone?: string;
+            email?: string;
+            website?: string;
+            address?: string;
+            city?: string;
+            postalCode?: string;
+            state?: string;
+            country?: string;
+            description?: string;
+            customFields?: {
+                id: string;
+                key: string;
+                field_value: string;
+            }[];
+            dateAdded: string;
+            dateUpdated: string;
+        };
+        traceId: string;
+    }>["result"];
+    respond: Promise<IGohighlevelFunctionsBusinessUpdate["result"]>;
+}
 export interface IGohighlevelFunctions {
     onRequest: IGohighlevelFunctionsRequest;
     onContactUpsert: IGohighlevelFunctionsContactCreate;
     onContactGet: IGohighlevelFunctionsContactGet;
     onCustomFieldsGet: IGohighlevelFunctionsCustomFieldsGet;
     onBusinessCreate: IGohighlevelFunctionsBusinessCreate;
+    onBusinessUpdate: IGohighlevelFunctionsBusinessUpdate;
 }
 export declare class Gohighlevel {
     private token;
@@ -242,4 +290,5 @@ export declare class Gohighlevel {
     onContactGet: ({ id, }: IGohighlevelFunctions["onContactGet"]["props"]) => IGohighlevelFunctions["onContactGet"]["respond"];
     onCustomFieldsGet: ({}: IGohighlevelFunctions["onCustomFieldsGet"]["props"]) => IGohighlevelFunctions["onCustomFieldsGet"]["respond"];
     onBusinessCreate: ({ data, }: IGohighlevelFunctions["onBusinessCreate"]["props"]) => IGohighlevelFunctions["onBusinessCreate"]["respond"];
+    onBusinessUpdate: ({ id, data, }: IGohighlevelFunctions["onBusinessUpdate"]["props"]) => IGohighlevelFunctions["onBusinessUpdate"]["respond"];
 }

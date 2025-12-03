@@ -91,6 +91,22 @@ class Gohighlevel {
         });
         return result;
     };
+    onBusinessUpdate = async ({ id, data, }) => {
+        const result = await this.onRequest({
+            url: `/businesses/${id}`,
+            method: "PUT",
+            body: {
+                ...data,
+                // locationId: this.locationId,
+            },
+            ifError: (result) => {
+                if (!result?.business?.id) {
+                    throw new Error("Error updating business: " + JSON.stringify(result));
+                }
+            },
+        });
+        return result;
+    };
 }
 exports.Gohighlevel = Gohighlevel;
 //# sourceMappingURL=index.js.map
